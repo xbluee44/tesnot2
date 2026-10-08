@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamm Game - All Games</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* ========== LOGIN & REGISTER ========== */
+        .auth-container {
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px 35px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            max-width: 450px;
+            margin: 50px auto;
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-container .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1rem;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 20px rgba(255,215,0,0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #666;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255,215,0,0.3);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+        }
+
+        .auth-switch a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .error-msg {
+            background: rgba(255,0,0,0.15);
+            border: 1px solid rgba(255,0,0,0.3);
+            border-radius: 10px;
+            padding: 12px;
+            color: #f87171;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        .success-msg {
+            background: rgba(0,255,0,0.1);
+            border: 1px solid rgba(0,255,0,0.2);
+            border-radius: 10px;
+            padding: 12px;
+            color: #4ade80;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+        }
+
+        .success-msg.show {
+            display: block;
+        }
+
+        /* ========== TANYA ADMIN ========== */
+        .ask-admin-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .ask-admin-section .btn-ask-admin {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(100,150,255,0.2);
+            color: #88bbff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(100,150,255,0.3);
+            font-size: 0.9rem;
+        }
+
+        .ask-admin-section .btn-ask-admin:hover {
+            background: rgba(100,150,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .ask-admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .ask-admin-modal.active {
+            display: flex;
+        }
+
+        .ask-admin-modal .modal-content {
+            background: rgba(30,30,60,0.95);
+            border-radius: 30px;
+            padding: 35px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(255,215,0,0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+
+        .ask-admin-modal .modal-content h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .ask-admin-modal .modal-content textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1rem;
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .ask-admin-modal .modal-content textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .ask-admin-modal .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: flex-end;
+        }
+
+        .ask-admin-modal .modal-actions button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .ask-admin-modal .modal-actions .btn-send {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+        }
+
+        .ask-admin-modal .modal-actions .btn-send:hover {
+            transform: scale(1.05);
+        }
+
+        .ask-admin-modal .modal-actions .btn-close-modal {
+            background: rgba(255,255,255,0.1);
+            color: #aaa;
+        }
+
+        .ask-admin-modal .modal-actions .btn-close-modal:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* ========== GAME WRAPPER ========== */
+        .game-wrapper {
+            display: none;
+        }
+
+        .game-wrapper.active {
+            display: block;
+        }
+
+        /* ========== USER HEADER ========== */
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1a1a2e;
+        }
+
+        .user-details .name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .user-details .role {
+            font-size: 0.8rem;
+            color: #ffd700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-logout {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255,0,0,0.15);
+            color: #f87171;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(255,0,0,0.2);
+        }
+
+        .btn-logout:hover {
+            background: rgba(255,0,0,0.25);
+            transform: scale(1.05);
+        }
+
+        .btn-admin {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255,215,0,0.15);
+            color: #ffd700;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .btn-admin:hover {
+            background: rgba(255,215,0,0.25);
+            transform: scale(1.05);
+        }
+
+        /* ========== ADMIN PANEL ========== */
+        .admin-panel {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,215,0,0.2);
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-panel h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-panel table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-panel th {
+            text-align: left;
+            padding: 12px 15px;
+            color: #ffd700;
+            border-bottom: 2px solid rgba(255,215,0,0.2);
+            font-weight: 600;
+        }
+
+        .admin-panel td {
+            padding: 12px 15px;
+            color: #ccc;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .admin-panel .no-data {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+        }
+
+        .admin-panel .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-user {
+            background: rgba(100,100,255,0.2);
+            color: #8888ff;
+        }
+
+        .badge-admin {
+            background: rgba(255,215,0,0.2);
+            color: #ffd700;
+        }
+
+        .admin-panel .password-cell {
+            color: #ffd700;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .btn-danger {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255,0,0,0.15);
+            color: #f87171;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(255,0,0,0.2);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255,0,0,0.25);
+        }
+
+        /* ========== PESAN ADMIN ========== */
+        .admin-messages {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            border: 1px solid rgba(255,215,0,0.1);
+        }
+
+        .admin-messages h4 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .admin-messages .message-item {
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border-left: 3px solid #ffd700;
+        }
+
+        .admin-messages .message-item .msg-header {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .admin-messages .message-item .msg-body {
+            color: #ddd;
+        }
+
+        .admin-messages .message-item .msg-actions {
+            margin-top: 8px;
+        }
+
+        .admin-messages .no-messages {
+            color: #666;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* ========== GAME SELECTOR ========== */
+        .game-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .game-selector::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .game-selector::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .game-selector::-webkit-scrollbar-thumb {
+            background: #ffd700;
+            border-radius: 10px;
+        }
+
+        .game-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.08);
+            color: #ccc;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .game-btn:hover {
+            background: rgba(255,215,0,0.15);
+            color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .game-btn.active {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            border-color: #ffd700;
+            box-shadow: 0 4px 20px rgba(255,215,0,0.3);
+        }
+
+        /* ========== GAME CARD ========== */
+        .game-card {
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 30px 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            min-height: 400px;
+            position: relative;
+        }
+
+        .game-title {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .question-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 25px 20px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .image-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 15px;
+            min-height: 200px;
+        }
+
+        .image-container.hidden {
+            display: none;
+            min-height: 0;
+            padding: 0;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 400px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            object-fit: contain;
+            background: #1a1a2e;
+        }
+
+        .soal-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1.6;
+            color: #fff;
+            text-align: center;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        .soal-text .label-soal {
+            display: block;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 8px;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        .soal-text.hidden {
+            display: none;
+        }
+
+        /* ========== AUDIO PLAYER ========== */
+        .audio-player {
+            width: 100%;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .audio-player audio {
+            width: 100%;
+            height: 50px;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .audio-player audio::-webkit-media-controls-panel {
+            background: rgba(255,215,0,0.1);
+        }
+
+        .audio-player .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .audio-player .btn-play {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .audio-player .btn-play:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(255,215,0,0.3);
+        }
+
+        .audio-player .btn-play:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .audio-status {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        .input-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        #jawabanInput {
+            flex: 2;
+            min-width: 200px;
+            padding: 15px 22px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.9);
+            color: #1a1a2e;
+            outline: 2px solid transparent;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        #jawabanInput:focus {
+            outline: 2px solid #ffd700;
+            background: #fff;
+        }
+
+        .btn-primary {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(255,215,0,0.3);
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255,215,0,0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            box-shadow: none;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+        }
+
+        .action-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .action-group .btn-primary {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .feedback {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 18px 22px;
+            margin: 18px 0 8px;
+            border-left: 4px solid #ffd700;
+            min-height: 70px;
+            transition: 0.3s;
+            line-height: 1.6;
+        }
+
+        .feedback .highlight {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        .feedback .deskripsi {
+            display: block;
+            margin-top: 8px;
+            color: #aaa;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        .feedback .correct {
+            color: #4ade80;
+        }
+
+        .feedback .wrong {
+            color: #f87171;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .status-badge {
+            background: rgba(255,255,255,0.05);
+            padding: 5px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .creator-tag {
+            color: #666;
+        }
+
+        .creator-tag span {
+            color: #ffd700;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: #aaa;
+        }
+
+        .loading .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,215,0,0.1);
+            border-top: 4px solid #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .auth-container { padding: 30px 20px; margin: 20px auto; }
+            .auth-container h2 { font-size: 2rem; }
+            .game-btn { font-size: 0.75rem; padding: 8px 14px; }
+            .soal-text { font-size: 1.2rem; }
+            .game-card { padding: 20px 15px; }
+            .input-section { flex-direction: column; }
+            #jawabanInput { width: 100%; }
+            .btn-primary { width: 100%; }
+            .image-container img { max-height: 250px; }
+            .image-container { min-height: 150px; }
+            .user-header { flex-direction: column; align-items: stretch; }
+            .header-actions { justify-content: center; }
+            .admin-panel { padding: 15px; overflow-x: auto; }
+            .admin-panel table { font-size: 0.8rem; }
+            .admin-panel th, .admin-panel td { padding: 8px 10px; }
+            .audio-player .audio-controls { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ========== AUTH (LOGIN/REGISTER) ========== -->
+        <div id="authContainer">
+            <div class="auth-container">
+                <h2>🎮 KAMM GAME</h2>
+                <div class="subtitle" id="authSubtitle">Silakan login untuk bermain</div>
+                
+                <div class="error-msg" id="errorMsg"></div>
+                <div class="success-msg" id="successMsg"></div>
+                
+                <form id="authForm">
+                    <div class="form-group">
+                        <label for="usernameInput">👤 Username</label>
+                        <input type="text" id="usernameInput" placeholder="Masukkan username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordInput">🔒 Password</label>
+                        <input type="password" id="passwordInput" placeholder="Masukkan password" required>
+                    </div>
+                    <button type="submit" class="btn-auth" id="authBtn">Login</button>
+                </form>
+                
+                <div class="auth-switch">
+                    <span id="authSwitchText">Belum punya akun?</span>
+                    <a id="authSwitchLink">Daftar sekarang</a>
+                </div>
+                
+                <!-- Tanya Admin -->
+                <div class="ask-admin-section">
+                    <button class="btn-ask-admin" id="askAdminBtn">💬 Lupa Password? Tanya Admin</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== MODAL TANYA ADMIN ========== -->
+        <div class="ask-admin-modal" id="askAdminModal">
+            <div class="modal-content">
+                <h3>💬 Kirim Pesan ke Admin</h3>
+                <p style="color:#aaa; margin-bottom:15px; text-align:center; font-size:0.9rem;">
+                    Tulis pesan Anda, admin akan membalas di panel admin.
+                </p>
+                <textarea id="askAdminMessage" placeholder="Tulis pesan Anda di sini... (contoh: lupa password, mau reset akun, dll)"></textarea>
+                <div class="modal-actions">
+                    <button class="btn-close-modal" id="closeAskModal">Tutup</button>
+                    <button class="btn-send" id="sendAskMessage">📤 Kirim</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== GAME WRAPPER ========== -->
+        <div class="game-wrapper" id="gameWrapper">
+            <!-- User Header -->
+            <div class="user-header">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-details">
+                        <div class="name" id="userName">User</div>
+                        <div class="role" id="userRole">User</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-admin" id="adminToggleBtn" style="display:none;">👑 Admin Panel</button>
+                    <button class="btn-logout" id="logoutBtn">🚪 Logout</button>
+                </div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div class="admin-panel" id="adminPanel">
+                <h3>👑 Admin Panel - Manajemen User</h3>
+                <div id="userTableContainer">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Role</th>
+                                <th>Bergabung</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <tr><td colspan="6" class="no-data">Tidak ada user terdaftar</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pesan dari user -->
+                <div class="admin-messages" id="adminMessages">
+                    <h4>📩 Pesan dari User</h4>
+                    <div id="messagesContainer">
+                        <div class="no-messages">Belum ada pesan</div>
+                    </div>
+                </div>
+                
+                <div class="admin-actions">
+                    <button class="btn-danger" id="clearAllUsersBtn">🗑️ Hapus Semua User</button>
+                    <button class="btn-primary" id="refreshUsersBtn" style="flex:0;">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <!-- Game Selector -->
+            <div class="game-selector" id="gameSelector">
+                <button class="game-btn active" data-game="caklontong">🍚 Cak Lontong</button>
+                <button class="game-btn" data-game="tebaktebakan">❓ Tebak Tebakan</button>
+                <button class="game-btn" data-game="tebakmakanan">🍕 Tebak Makanan</button>
+                <button class="game-btn" data-game="tebaklogo">🏷️ Tebak Logo</button>
+                <button class="game-btn" data-game="tebaklirik">🎵 Tebak Lirik</button>
+                <button class="game-btn" data-game="tebaklagu">🎶 Tebak Lagu</button>
+                <button class="game-btn" data-game="tebakkimia">🧪 Tebak Kimia</button>
+                <button class="game-btn" data-game="tebakkata">📝 Tebak Kata</button>
+                <button class="game-btn" data-game="tebakgame">🎮 Tebak Game</button>
+                <button class="game-btn" data-game="tebakgambar">🖼️ Tebak Gambar</button>
+                <button class="game-btn" data-game="tebakbendera">🚩 Tebak Bendera</button>
+                <button class="game-btn" data-game="susunkata">🧩 Susun Kata</button>
+                <button class="game-btn" data-game="siapakahaku">🕵️ Siapakah Aku</button>
+                <button class="game-btn" data-game="lengkapikalimat">✏️ Lengkapi Kalimat</button>
+                <button class="game-btn" data-game="asahotak">🧠 Asah Otak</button>
+            </div>
+
+            <!-- Game Card -->
+            <div class="game-card" id="gameCard">
+                <div id="loadingState" class="loading">
+                    <div class="spinner"></div>
+                    <p>Memuat soal...</p>
+                </div>
+
+                <div id="gameContent" class="hidden">
+                    <div class="game-title" id="gameTitle">🍚 Cak Lontong</div>
+
+                    <div class="question-box">
+                        <!-- Image Container -->
+                        <div class="image-container hidden" id="imageContainer">
+                            <img id="gameImage" src="" alt="Gambar soal">
+                        </div>
+                        
+                        <!-- Audio Player (khusus tebaklagu) -->
+                        <div class="audio-player hidden" id="audioPlayer">
+                            <div class="audio-controls">
+                                <button class="btn-play" id="playAudioBtn">▶ Putar Lagu</button>
+                                <span class="audio-status" id="audioStatus">⏸ Belum diputar</span>
+                            </div>
+                            <audio id="audioElement" controls style="display:none;"></audio>
+                        </div>
+                        
+                        <!-- Soal Text -->
+                        <div id="soalDisplay" class="soal-text hidden">
+                            <span class="label-soal">📝 SOAL</span>
+                            <span id="soalText"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-section">
+                        <input type="text" id="jawabanInput" placeholder="Ketik jawaban..." autocomplete="off" />
+                        <button class="btn-primary" id="jawabBtn">▶ Jawab</button>
+                    </div>
+
+                    <div class="feedback" id="feedbackArea">
+                        <span>💡</span> Klik "Soal Baru" atau tulis jawabanmu.
+                    </div>
+
+                    <div class="action-group">
+                        <button class="btn-primary" id="newSoalBtn">🔄 Soal Baru</button>
+                        <button class="btn-primary btn-secondary" id="petunjukBtn">📖 Petunjuk</button>
+                    </div>
+
+                    <div class="status-bar">
+                        <span class="status-badge" id="statusBadge">● Siap</span>
+                        <span class="creator-tag">⚡ <span id="creatorName">Kamm</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ============================================================
+            // 1. DATABASE USER (localStorage)
+            // ============================================================
+            const DB_KEY = 'kammgame_users';
+            const MSG_KEY = 'kammgame_messages';
+
+            function getUsers() {
+                try {
+                    const data = localStorage.getItem(DB_KEY);
+                    return data ? JSON.parse(data) : [];
+                } catch { return []; }
+            }
+
+            function saveUsers(users) {
+                localStorage.setItem(DB_KEY, JSON.stringify(users));
+            }
+
+            function getMessages() {
+                try {
+                    const data = localStorage.getItem(MSG_KEY);
+                    return data ? JSON.parse(data) : [];
+                } catch { return []; }
+            }
+
+            function saveMessages(messages) {
+                localStorage.setItem(MSG_KEY, JSON.stringify(messages));
+            }
+
+            // Inisialisasi user default
+            function initUsers() {
+                let users = getUsers();
+                if (users.length === 0) {
+                    users = [
+                        { id: 1, username: 'admin', password: 'admin123', role: 'admin', joined: new Date().toISOString() },
+                        { id: 2, username: 'user', password: 'user123', role: 'user', joined: new Date().toISOString() }
+                    ];
+                    saveUsers(users);
+                }
+                return users;
+            }
+            initUsers();
+
+            // ============================================================
+            // 2. SESSION
+            // ============================================================
+            const SESSION_KEY = 'kammgame_session';
+
+            function getSession() {
+                try {
+                    const data = localStorage.getItem(SESSION_KEY);
+                    return data ? JSON.parse(data) : null;
+                } catch { return null; }
+            }
+
+            function saveSession(user) {
+                localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+            }
+
+            function clearSession() {
+                localStorage.removeItem(SESSION_KEY);
+            }
+
+            // ============================================================
+            // 3. DOM ELEMENTS
+            // ============================================================
+            const authContainer = document.getElementById('authContainer');
+            const gameWrapper = document.getElementById('gameWrapper');
+            const authForm = document.getElementById('authForm');
+            const authBtn = document.getElementById('authBtn');
+            const authSubtitle = document.getElementById('authSubtitle');
+            const authSwitchText = document.getElementById('authSwitchText');
+            const authSwitchLink = document.getElementById('authSwitchLink');
+            const usernameInput = document.getElementById('usernameInput');
+            const passwordInput = document.getElementById('passwordInput');
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const adminToggleBtn = document.getElementById('adminToggleBtn');
+            const adminPanel = document.getElementById('adminPanel');
+            const userTableBody = document.getElementById('userTableBody');
+            const clearAllUsersBtn = document.getElementById('clearAllUsersBtn');
+            const refreshUsersBtn = document.getElementById('refreshUsersBtn');
+            const messagesContainer = document.getElementById('messagesContainer');
+
+            // Ask Admin
+            const askAdminBtn = document.getElementById('askAdminBtn');
+            const askAdminModal = document.getElementById('askAdminModal');
+            const closeAskModal = document.getElementById('closeAskModal');
+            const sendAskMessage = document.getElementById('sendAskMessage');
+            const askAdminMessage = document.getElementById('askAdminMessage');
+
+            // Game elements
+            const gameSelector = document.getElementById('gameSelector');
+            const gameButtons = document.querySelectorAll('.game-btn');
+            const loadingState = document.getElementById('loadingState');
+            const gameContent = document.getElementById('gameContent');
+            const gameTitle = document.getElementById('gameTitle');
+            const soalDisplay = document.getElementById('soalDisplay');
+            const soalText = document.getElementById('soalText');
+            const imageContainer = document.getElementById('imageContainer');
+            const gameImage = document.getElementById('gameImage');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const audioElement = document.getElementById('audioElement');
+            const playAudioBtn = document.getElementById('playAudioBtn');
+            const audioStatus = document.getElementById('audioStatus');
+            const jawabanInput = document.getElementById('jawabanInput');
+            const jawabBtn = document.getElementById('jawabBtn');
+            const newSoalBtn = document.getElementById('newSoalBtn');
+            const petunjukBtn = document.getElementById('petunjukBtn');
+            const feedbackArea = document.getElementById('feedbackArea');
+            const statusBadge = document.getElementById('statusBadge');
+            const creatorName = document.getElementById('creatorName');
+
+            // ============================================================
+            // 4. AUTH STATE
+            // ============================================================
+            let isLoginMode = true;
+            let currentUser = null;
+            let currentGame = 'caklontong';
+            let currentData = null;
+            let isLoading = false;
+            let currentAudioUrl = null;
+
+            // ============================================================
+            // 5. AUTH FUNCTIONS
+            // ============================================================
+            function showError(msg) {
+                errorMsg.textContent = msg;
+                errorMsg.classList.add('show');
+                successMsg.classList.remove('show');
+            }
+
+            function showSuccess(msg) {
+                successMsg.textContent = msg;
+                successMsg.classList.add('show');
+                errorMsg.classList.remove('show');
+            }
+
+            function hideMessages() {
+                errorMsg.classList.remove('show');
+                successMsg.classList.remove('show');
+            }
+
+            function switchAuthMode(mode) {
+                isLoginMode = mode;
+                hideMessages();
+                if (mode) {
+                    authSubtitle.textContent = 'Silakan login untuk bermain';
+                    authBtn.textContent = 'Login';
+                    authSwitchText.textContent = 'Belum punya akun?';
+                    authSwitchLink.textContent = 'Daftar sekarang';
+                } else {
+                    authSubtitle.textContent = 'Daftar akun baru';
+                    authBtn.textContent = 'Daftar';
+                    authSwitchText.textContent = 'Sudah punya akun?';
+                    authSwitchLink.textContent = 'Login sekarang';
+                }
+                usernameInput.value = '';
+                passwordInput.value = '';
+            }
+
+            function handleAuth(e) {
+                e.preventDefault();
+                hideMessages();
+
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                if (!username || !password) {
+                    showError('Username dan password harus diisi!');
+                    return;
+                }
+
+                const users = getUsers();
+
+                if (isLoginMode) {
+                    const user = users.find(u => u.username === username && u.password === password);
+                    if (!user) {
+                        showError('Username atau password salah!');
+                        return;
+                    }
+                    showSuccess('Login berhasil! Selamat datang ' + user.username);
+                    setTimeout(() => {
+                        loginUser(user);
+                    }, 500);
+                } else {
+                    if (users.find(u => u.username === username)) {
+                        showError('Username sudah terdaftar!');
+                        return;
+                    }
+                    const newUser = {
+                        id: Date.now(),
+                        username: username,
+                        password: password,
+                        role: 'user',
+                        joined: new Date().toISOString()
+                    };
+                    users.push(newUser);
+                    saveUsers(users);
+                    showSuccess('Registrasi berhasil! Silakan login.');
+                    setTimeout(() => {
+                        switchAuthMode(true);
+                    }, 800);
+                }
+            }
+
+            function loginUser(user) {
+                currentUser = user;
+                saveSession(user);
+                showGameWrapper();
+            }
+
+            function logoutUser() {
+                clearSession();
+                currentUser = null;
+                showAuthContainer();
+                adminPanel.classList.remove('active');
+                adminToggleBtn.style.display = 'none';
+                // Stop audio
+                audioElement.pause();
+            }
+
+            function showAuthContainer() {
+                authContainer.style.display = 'block';
+                gameWrapper.classList.remove('active');
+                switchAuthMode(true);
+            }
+
+            function showGameWrapper() {
+                authContainer.style.display = 'none';
+                gameWrapper.classList.add('active');
+                updateUserHeader();
+                updateAdminPanel();
+                updateMessages();
+                fetchSoal(currentGame);
+            }
+
+            function updateUserHeader() {
+                if (!currentUser) return;
+                const initial = currentUser.username.charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userName.textContent = currentUser.username;
+                userRole.textContent = currentUser.role === 'admin' ? '👑 Admin' : '🎮 Player';
+                
+                if (currentUser.role === 'admin') {
+                    adminToggleBtn.style.display = 'inline-block';
+                } else {
+                    adminToggleBtn.style.display = 'none';
+                    adminPanel.classList.remove('active');
+                }
+            }
+
+            // ============================================================
+            // 6. ADMIN FUNCTIONS
+            // ============================================================
+            function updateAdminPanel() {
+                if (!currentUser || currentUser.role !== 'admin') return;
+                
+                const users = getUsers();
+                if (users.length === 0) {
+                    userTableBody.innerHTML = '<tr><td colspan="6" class="no-data">Tidak ada user terdaftar</td></tr>';
+                    return;
+                }
+
+                let html = '';
+                users.forEach((user, index) => {
+                    const roleBadge = user.role === 'admin' ? 
+                        '<span class="badge badge-admin">Admin</span>' : 
+                        '<span class="badge badge-user">User</span>';
+                    const isCurrentUser = currentUser && currentUser.id === user.id;
+                    const deleteBtn = user.role !== 'admin' ? 
+                        `<button class="btn-danger" onclick="deleteUser(${user.id})">Hapus</button>` : 
+                        '<span style="color:#666;">Tidak bisa dihapus</span>';
+                    html += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${user.username} ${isCurrentUser ? '⭐' : ''}</td>
+                            <td class="password-cell">${user.password}</td>
+                            <td>${roleBadge}</td>
+                            <td>${new Date(user.joined).toLocaleDateString('id-ID')}</td>
+                            <td>${deleteBtn}</td>
+                        </tr>
+                    `;
+                });
+                userTableBody.innerHTML = html;
+            }
+
+            window.deleteUser = function(userId) {
+                if (!currentUser || currentUser.role !== 'admin') return;
+                if (!confirm('Yakin ingin menghapus user ini?')) return;
+                
+                let users = getUsers();
+                users = users.filter(u => u.id !== userId);
+                saveUsers(users);
+                updateAdminPanel();
+                showSuccess('User berhasil dihapus!');
+                setTimeout(() => hideMessages(), 2000);
+            };
+
+            function toggleAdminPanel() {
+                if (!currentUser || currentUser.role !== 'admin') return;
+                adminPanel.classList.toggle('active');
+                if (adminPanel.classList.contains('active')) {
+                    updateAdminPanel();
+                    updateMessages();
+                }
+            }
+
+            // ============================================================
+            // 7. PESAN ADMIN
+            // ============================================================
+            function updateMessages() {
+                if (!currentUser || currentUser.role !== 'admin') return;
+                const messages = getMessages();
+                
+                if (messages.length === 0) {
+                    messagesContainer.innerHTML = '<div class="no-messages">Belum ada pesan</div>';
+                    return;
+                }
+
+                let html = '';
+                messages.slice().reverse().forEach((msg, index) => {
+                    html += `
+                        <div class="message-item">
+                            <div class="msg-header">
+                                <span>👤 ${msg.username}</span>
+                                <span>${new Date(msg.time).toLocaleString('id-ID')}</span>
+                            </div>
+                            <div class="msg-body">${msg.message}</div>
+                            <div class="msg-actions">
+                                <button class="btn-danger" onclick="deleteMessage(${index})">Hapus</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                messagesContainer.innerHTML = html;
+            }
+
+            window.deleteMessage = function(index) {
+                if (!currentUser || currentUser.role !== 'admin') return;
+                let messages = getMessages();
+                messages.splice(index, 1);
+                saveMessages(messages);
+                updateMessages();
+            };
+
+            function sendMessageToAdmin() {
+                const message = askAdminMessage.value.trim();
+                if (!message) {
+                    alert('Silakan tulis pesan terlebih dahulu!');
+                    return;
+                }
+
+                const username = currentUser ? currentUser.username : 'Anonim';
+                const messages = getMessages();
+                messages.push({
+                    username: username,
+                    message: message,
+                    time: new Date().toISOString()
+                });
+                saveMessages(messages);
+
+                askAdminMessage.value = '';
+                askAdminModal.classList.remove('active');
+                alert('✅ Pesan berhasil dikirim ke Admin!');
+                
+                // Jika admin sedang login, refresh pesan
+                if (currentUser && currentUser.role === 'admin') {
+                    updateMessages();
+                }
+            }
+
+            // ============================================================
+            // 8. GAME FUNCTIONS
+            // ============================================================
+            const GAME_CONFIG = {
+                caklontong: { label: 'Cak Lontong', icon: '🍚', endpoint: 'caklontong', hasImage: false, hasAudio: false },
+                tebaktebakan: { label: 'Tebak Tebakan', icon: '❓', endpoint: 'tebaktebakan', hasImage: false, hasAudio: false },
+                tebakmakanan: { label: 'Tebak Makanan', icon: '🍕', endpoint: 'tebakmakanan', hasImage: true, hasAudio: false },
+                tebaklogo: { label: 'Tebak Logo', icon: '🏷️', endpoint: 'tebaklogo', hasImage: true, hasAudio: false },
+                tebaklirik: { label: 'Tebak Lirik', icon: '🎵', endpoint: 'tebaklirik', hasImage: false, hasAudio: false },
+                tebaklagu: { label: 'Tebak Lagu', icon: '🎶', endpoint: 'tebaklagu', hasImage: false, hasAudio: true },
+                tebakkimia: { label: 'Tebak Kimia', icon: '🧪', endpoint: 'tebakkimia', hasImage: false, hasAudio: false },
+                tebakkata: { label: 'Tebak Kata', icon: '📝', endpoint: 'tebakkata', hasImage: false, hasAudio: false },
+                tebakgame: { label: 'Tebak Game', icon: '🎮', endpoint: 'tebakgame', hasImage: true, hasAudio: false },
+                tebakgambar: { label: 'Tebak Gambar', icon: '🖼️', endpoint: 'tebakgambar', hasImage: true, hasAudio: false },
+                tebakbendera: { label: 'Tebak Bendera', icon: '🚩', endpoint: 'tebakbendera', hasImage: true, hasAudio: false },
+                susunkata: { label: 'Susun Kata', icon: '🧩', endpoint: 'susunkata', hasImage: false, hasAudio: false },
+                siapakahaku: { label: 'Siapakah Aku', icon: '🕵️', endpoint: 'siapakahaku', hasImage: false, hasAudio: false },
+                lengkapikalimat: { label: 'Lengkapi Kalimat', icon: '✏️', endpoint: 'lengkapikalimat', hasImage: false, hasAudio: false },
+                asahotak: { label: 'Asah Otak', icon: '🧠', endpoint: 'asahotak', hasImage: false, hasAudio: false }
+            };
+
+            function getEndpoint(gameId) {
+                return `https://api.theresav.biz.id/game/${GAME_CONFIG[gameId]?.endpoint || gameId}`;
+            }
+
+            function getGameLabel(gameId) {
+                const config = GAME_CONFIG[gameId];
+                return config ? `${config.icon} ${config.label}` : gameId;
+            }
+
+            async function fetchSoal(gameId) {
+                if (isLoading) return;
+                isLoading = true;
+                
+                loadingState.classList.remove('hidden');
+                gameContent.classList.add('hidden');
+                feedbackArea.innerHTML = `<span>⏳</span> Mengambil soal...`;
+                statusBadge.textContent = '● Memuat...';
+
+                // Reset audio
+                audioElement.pause();
+                audioElement.src = '';
+                currentAudioUrl = null;
+                audioStatus.textContent = '⏸ Belum diputar';
+
+                try {
+                    const endpoint = getEndpoint(gameId);
+                    const response = await fetch(endpoint);
+                    
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === true && data.result) {
+                        currentData = data;
+                        displayQuestion(data, gameId);
+                    } else {
+                        throw new Error('API returned status false');
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    feedbackArea.innerHTML = `<span>🚨</span> Gagal memuat soal. Periksa koneksi.`;
+                    statusBadge.textContent = '● Error';
+                    loadingState.classList.add('hidden');
+                    gameContent.classList.remove('hidden');
+                } finally {
+                    isLoading = false;
+                }
+            }
+
+            function displayQuestion(data, gameId) {
+                const result = data.result;
+                const gameLabel = getGameLabel(gameId);
+                const config = GAME_CONFIG[gameId];
+                const hasImage = config?.hasImage || false;
+                const hasAudio = config?.hasAudio || false;
+                
+                gameTitle.textContent = gameLabel;
+                
+                // ========== HANDLE GAMBAR ==========
+                const imageUrl = result.gambar || result.image || result.url || result.foto || result.img || null;
+                
+                if (hasImage && imageUrl && imageUrl.startsWith('http')) {
+                    imageContainer.classList.remove('hidden');
+                    gameImage.src = imageUrl;
+                    gameImage.alt = 'Gambar soal';
+                    gameImage.onerror = function() {
+                        // Jika gagal, sembunyikan container
+                        imageContainer.classList.add('hidden');
+                    };
+                } else {
+                    imageContainer.classList.add('hidden');
+                    gameImage.src = '';
+                }
+
+                // ========== HANDLE AUDIO (khusus tebaklagu) ==========
+                if (hasAudio) {
+                    audioPlayer.classList.remove('hidden');
+                    const audioUrl = result.audio || result.url || result.lagu || null;
+                    if (audioUrl && audioUrl.startsWith('http')) {
+                        currentAudioUrl = audioUrl;
+                        audioElement.src = audioUrl;
+                        audioStatus.textContent = '🎵 Siap diputar';
+                        playAudioBtn.disabled = false;
+                    } else {
+                        audioStatus.textContent = '❌ Audio tidak tersedia';
+                        playAudioBtn.disabled = true;
+                    }
+                } else {
+                    audioPlayer.classList.add('hidden');
+                    audioElement.src = '';
+                    playAudioBtn.disabled = true;
+                }
+
+                // ========== HANDLE SOAL ==========
+                const soalTextContent = result.soal || result.pertanyaan || result.question || '';
+                
+                if (soalTextContent && !hasImage) {
+                    // Tampilkan soal jika ada dan game tidak memiliki gambar
+                    soalDisplay.classList.remove('hidden');
+                    soalText.textContent = soalTextContent;
+                } else {
+                    soalDisplay.classList.add('hidden');
+                    soalText.textContent = '';
+                }
+
+                // Reset state
+                jawabanInput.value = '';
+                jawabanInput.focus();
+                feedbackArea.innerHTML = `<span>✨</span> Coba tebak jawabannya!`;
+                statusBadge.textContent = `● ${result.index || '?'}`;
+
+                if (data.creator) {
+                    creatorName.textContent = data.creator;
+                }
+
+                loadingState.classList.add('hidden');
+                gameContent.classList.remove('hidden');
+            }
+
+            // ========== AUDIO CONTROLS ==========
+            playAudioBtn.addEventListener('click', function() {
+                if (!currentAudioUrl) {
+                    audioStatus.textContent = '❌ Tidak ada audio';
+                    return;
+                }
+                
+                if (audioElement.paused) {
+                    audioElement.play().catch(err => {
+                        audioStatus.textContent = '❌ Gagal memutar audio';
+                        console.error('Play error:', err);
+                    });
+                    this.textContent = '⏸ Pause';
+                    audioStatus.textContent = '🎵 Memutar...';
+                } else {
+                    audioElement.pause();
+                    this.textContent = '▶ Putar Lagu';
+                    audioStatus.textContent = '⏸ Di-pause';
+                }
+            });
+
+            audioElement.addEventListener('ended', function() {
+                playAudioBtn.textContent = '▶ Putar Lagu';
+                audioStatus.textContent = '⏹ Selesai';
+            });
+
+            audioElement.addEventListener('error', function() {
+                playAudioBtn.textContent = '▶ Putar Lagu';
+                audioStatus.textContent = '❌ Error memutar audio';
+            });
+
+            function handleJawab() {
+                const userAnswer = jawabanInput.value.trim();
+                
+                if (!userAnswer) {
+                    feedbackArea.innerHTML = `<span>✏️</span> Masukkan jawaban terlebih dahulu.`;
+                    return;
+                }
+
+                if (!currentData || !currentData.result) {
+                    feedbackArea.innerHTML = `<span>⏳</span> Belum ada soal. Klik "Soal Baru".`;
+                    return;
+                }
+
+                const jawabanBenar = currentData.result.jawaban || '';
+                const isCorrect = userAnswer.toLowerCase() === jawabanBenar.toLowerCase();
+
+                if (isCorrect) {
+                    feedbackArea.innerHTML = `
+                        <span class="correct">✅ Benar!</span> Jawaban: <strong>“${jawabanBenar}”</strong>
+                        ${currentData.result.deskripsi ? `<span class="deskripsi">📌 ${currentData.result.deskripsi}</span>` : ''}
+                    `;
+                    statusBadge.textContent = `✓ Terjawab`;
+                    // Stop audio jika sedang diputar
+                    if (!audioElement.paused) {
+                        audioElement.pause();
+                        playAudioBtn.textContent = '▶ Putar Lagu';
+                    }
+                } else {
+                    feedbackArea.innerHTML = `
+                        <span class="wrong">❌ Salah.</span> Coba lagi atau lihat petunjuk.
+                        ${currentData.result.deskripsi ? `<span class="deskripsi">💡 Petunjuk: ${currentData.result.deskripsi}</span>` : ''}
+                    `;
+                    statusBadge.textContent = `✗ Coba lagi`;
+                }
+            }
+
+            function showPetunjuk() {
+                if (!currentData || !currentData.result) {
+                    feedbackArea.innerHTML = `<span>📖</span> Belum ada soal untuk ditampilkan petunjuknya.`;
+                    return;
+                }
+
+                const desc = currentData.result.deskripsi || 'Tidak ada petunjuk.';
+                const jawaban = currentData.result.jawaban || '???';
+                
+                feedbackArea.innerHTML = `
+                    <span>📖 Petunjuk:</span> ${desc}
+                    <span class="deskripsi">🔎 Jawaban: “${jawaban}” (tersembunyi)</span>
+                `;
+                statusBadge.textContent = `● Petunjuk`;
+            }
+
+            function switchGame(gameId) {
+                if (gameId === currentGame) {
+                    fetchSoal(gameId);
+                    return;
+                }
+
+                currentGame = gameId;
+                
+                gameButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.game === gameId);
+                });
+
+                // Reset audio
+                audioElement.pause();
+                audioElement.src = '';
+                playAudioBtn.textContent = '▶ Putar Lagu';
+                audioStatus.textContent = '⏸ Belum diputar';
+                
+                fetchSoal(gameId);
+            }
+
+            // ============================================================
+            // 9. EVENT LISTENERS
+            // ============================================================
+            // Auth
+            authForm.addEventListener('submit', handleAuth);
+            authSwitchLink.addEventListener('click', () => {
+                switchAuthMode(!isLoginMode);
+            });
+
+            // Logout
+            logoutBtn.addEventListener('click', logoutUser);
+
+            // Admin toggle
+            adminToggleBtn.addEventListener('click', toggleAdminPanel);
+
+            // Refresh users
+            refreshUsersBtn.addEventListener('click', () => {
+                if (currentUser && currentUser.role === 'admin') {
+                    updateAdminPanel();
+                    updateMessages();
+                    showSuccess('Data diperbarui!');
+                    setTimeout(() => hideMessages(), 1500);
+                }
+            });
+
+            // Clear all users
+            clearAllUsersBtn.addEventListener('click', () => {
+                if (!currentUser || currentUser.role !== 'admin') return;
+                if (!confirm('⚠️ Yakin ingin menghapus SEMUA user (kecuali admin)?')) return;
+                
+                let users = getUsers();
+                users = users.filter(u => u.role === 'admin');
+                saveUsers(users);
+                updateAdminPanel();
+                showSuccess('Semua user (non-admin) telah dihapus!');
+                setTimeout(() => hideMessages(), 2000);
+            });
+
+            // Ask Admin
+            askAdminBtn.addEventListener('click', () => {
+                askAdminModal.classList.add('active');
+                askAdminMessage.value = '';
+                askAdminMessage.focus();
+            });
+
+            closeAskModal.addEventListener('click', () => {
+                askAdminModal.classList.remove('active');
+            });
+
+            sendAskMessage.addEventListener('click', sendMessageToAdmin);
+
+            askAdminModal.addEventListener('click', (e) => {
+                if (e.target === askAdminModal) {
+                    askAdminModal.classList.remove('active');
+                }
+            });
+
+            // Game buttons
+            gameButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const gameId = btn.dataset.game;
+                    switchGame(gameId);
+                });
+            });
+
+            // Jawab
+            jawabBtn.addEventListener('click', handleJawab);
+            jawabanInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleJawab();
+                }
+            });
+
+            // New Soal
+            newSoalBtn.addEventListener('click', () => {
+                fetchSoal(currentGame);
+            });
+
+            // Petunjuk
+            petunjukBtn.addEventListener('click', showPetunjuk);
+
+            // ============================================================
+            // 10. INIT
+            // ============================================================
+            const session = getSession();
+            if (session) {
+                const users = getUsers();
+                const user = users.find(u => u.id === session.id && u.username === session.username);
+                if (user) {
+                    currentUser = user;
+                    showGameWrapper();
+                } else {
+                    clearSession();
+                    showAuthContainer();
+                }
+            } else {
+                showAuthContainer();
+            }
+
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    if (authContainer.style.display !== 'none') {
+                        usernameInput.focus();
+                    } else {
+                        jawabanInput.focus();
+                    }
+                }, 500);
+            });
+
+        })();
+    </script>
+</body>
+</html>
